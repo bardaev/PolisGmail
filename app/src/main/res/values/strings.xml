@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">PolisGmail</string>
+    <string name="title">title</string>
+    <string name="theme">theme</string>
+    <string name="sendTo">Кому?</string>
+    <string name="mailTitle">Тема?</string>
+    <string name="fullText">Что хотите сказать?</string>
 </resources>

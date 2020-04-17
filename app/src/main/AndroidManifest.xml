@@ -3,6 +3,7 @@
     package="com.polis.polisgmail">
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
@@ -11,7 +12,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".SendingActivity"></activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".listmail.ListMailsActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,10 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MailPagerActivity"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

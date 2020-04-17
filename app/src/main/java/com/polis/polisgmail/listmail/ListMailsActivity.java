@@ -39,7 +39,8 @@ public class ListMailsActivity extends AppCompatActivity {
     }
 
     public void init() {
-        compositionRoot = ((App) getApplicationContext()).getCompositionRoot();
+        compositionRoot = ((App) getApplication()).getCompositionRoot();
+
         mailLab = compositionRoot.getMailLab();
 
         swipeRefreshLayout = findViewById(R.id.mail_list_refresh);

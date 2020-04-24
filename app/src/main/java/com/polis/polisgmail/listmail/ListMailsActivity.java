@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.polis.polisgmail.App;
 import com.polis.polisgmail.LoginActivity;
 import com.polis.polisgmail.MailLab;
@@ -18,6 +19,7 @@ import com.polis.polisgmail.R;
 import com.polis.polisgmail.dao.Mail;
 import com.polis.polisgmail.di.CompositionRoot;
 import com.polis.polisgmail.listmail.listeners.OnRefresh;
+import com.polis.polisgmail.sendmail.SendMailActivity;
 
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class ListMailsActivity extends AppCompatActivity implements
     private RecyclerView mailRecyclerView;
     private MailAdapter mailAdapter;
     private MailPresenter mailPresenter;
+    private FloatingActionButton floatingActionButton;
 
     private CompositionRoot compositionRoot;
 
@@ -48,6 +51,15 @@ public class ListMailsActivity extends AppCompatActivity implements
 
         swipeRefreshLayout = findViewById(R.id.mail_list_refresh);
         mailRecyclerView = findViewById(R.id.mail_recycler_view);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ListMailsActivity.this, SendMailActivity.class);
+                startActivity(intent);
+            }
+        });
 
         findViewById(R.id.move_to_loginactivity_button).setOnClickListener(this);
 

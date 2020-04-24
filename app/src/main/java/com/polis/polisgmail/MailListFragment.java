@@ -30,14 +30,14 @@ public class MailListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_mail_list, container, false);
+//        View view = inflater.inflate(R.layout.fragment_mail_list, container, false);
 
-        mailRecyclerView = view.findViewById(R.id.mail_recycler_view);
-        mailRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        updateUI();
-
-        return view;
+//        mailRecyclerView = view.findViewById(R.id.mail_recycler_view);
+//        mailRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//
+//        updateUI();
+//
+        return null;
     }
 
     @Override

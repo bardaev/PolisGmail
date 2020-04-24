@@ -54,11 +54,12 @@ public class ListMailsActivity extends AppCompatActivity implements
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
+        mailAdapter = new MailAdapter(mailLab.getMails());
+
         swipeRefreshLayout.setOnRefreshListener(new OnRefresh(swipeRefreshLayout, mailAdapter));
         mailRecyclerView.setLayoutManager(linearLayoutManager);
         mailRecyclerView.setAdapter(mailAdapter);
 
-        mailAdapter = new MailAdapter(mailLab.getMails());
         MailModel mailModel = new MailModel(mailLab);
         mailPresenter = new MailPresenter(mailModel);
         mailPresenter.attachView(this);
@@ -77,7 +78,6 @@ public class ListMailsActivity extends AppCompatActivity implements
     }
 
     @Override
-
     protected void onDestroy() {
         super.onDestroy();
         mailPresenter.detachView();

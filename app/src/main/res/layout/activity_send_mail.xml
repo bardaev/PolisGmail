@@ -8,6 +8,8 @@
     android:orientation="vertical"
     android:weightSum="4"
     tools:context=".sendmail.SendMailActivity">
+
+
     <EditText
         android:id="@+id/to_address"
         android:layout_width="match_parent"
@@ -61,10 +63,6 @@
         android:layout_marginRight="20dp"
         app:srcCompat="@drawable/icon"
         tools:ignore="RtlHardcoded" />
-    <Button
-        android:id="@+id/changeAccount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Change Account" />
+
 
 </LinearLayout>

@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -98,18 +99,6 @@ public class SendMailActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.changeAccount).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Utils.checkPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    startActivityForResult(mCredential.newChooseAccountIntent(), Utils.REQUEST_ACCOUNT_PICKER);
-                } else {
-                    ActivityCompat.requestPermissions(SendMailActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, SELECT_PHOTO);
-                }
-            }
-        });
-
         sendFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,8 +121,8 @@ public class SendMailActivity extends AppCompatActivity {
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Sending...");
 
-        //toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+       // toolbar = (Toolbar) findViewById(R.id.toolbar);
+       // setSupportActionBar(toolbar);
         sendFabButton = (FloatingActionButton) findViewById(R.id.SendButton);
         edtToAddress = (EditText) findViewById(R.id.to_address);
         edtSubject = (EditText) findViewById(R.id.subject);
@@ -154,7 +143,7 @@ public class SendMailActivity extends AppCompatActivity {
         } else if (!internetDetector.checkMobileInternetConn()) {
             showMessage(view, "No network connection available.");
         } else if (!Utils.isNotEmpty(edtToAddress)) {
-            showMessage(view, "To address Required");
+            showMessage(view, "To address Incorrect");
         } else if (!Utils.isNotEmpty(edtSubject)) {
             showMessage(view, "Subject Required");
         } else if (!Utils.isNotEmpty(edtMessage)) {
@@ -311,13 +300,29 @@ public class SendMailActivity extends AppCompatActivity {
             String body = Utils.getString(edtMessage);
             MimeMessage mimeMessage;
             String response = "";
-            try {
-                mimeMessage = createEmail(to, from, subject, body);
-                response = sendMessage(mService, user, mimeMessage);
-            } catch (MessagingException e) {
-                e.printStackTrace();
+            if (isValidEmail(to)) {
+                try {
+                    mimeMessage = createEmail(to, from, subject, body);
+                    response = sendMessage(mService, user, mimeMessage);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
             }
+
             return response;
+        }
+
+        /**
+         * Method to check is email valid
+         * @param email
+         * @return result of check
+         */
+        public final boolean isValidEmail(CharSequence email) {
+            if (TextUtils.isEmpty(email)) {
+                return false;
+            } else {
+                return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+            }
         }
 
         // Method to send email

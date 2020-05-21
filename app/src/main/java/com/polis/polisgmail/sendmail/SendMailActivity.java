@@ -313,8 +313,8 @@ public class SendMailActivity extends AppCompatActivity {
         }
 
         /**
-         * Method to check is email valid
-         * @param email
+         * Method to check is email valid.
+         * @param email email
          * @return result of check
          */
         public final boolean isValidEmail(CharSequence email) {
@@ -364,7 +364,7 @@ public class SendMailActivity extends AppCompatActivity {
             BodyPart textBody = new MimeBodyPart();
             textBody.setText(bodyText);
             multipart.addBodyPart(textBody);
-
+            Log.v("create email",  "create email");
             if (!(activity.fileName.equals(""))) {
                 // Create new MimeBodyPart object and set DataHandler object to this object
                 MimeBodyPart attachmentBody = new MimeBodyPart();
@@ -373,6 +373,8 @@ public class SendMailActivity extends AppCompatActivity {
                 attachmentBody.setDataHandler(new DataHandler(source));
                 attachmentBody.setFileName(filename);
                 multipart.addBodyPart(attachmentBody);
+                Log.v("atttach email",  "atttach email");
+
             }
 
             //Set the multipart object to the message object

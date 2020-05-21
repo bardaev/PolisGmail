@@ -22,7 +22,7 @@
             android:parentActivityName=".listmail.ListMailsActivity"/>
         <activity android:name=".SendingActivity"/>
         <activity
-            android:name=".LoginActivity">
+            android:name=".login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

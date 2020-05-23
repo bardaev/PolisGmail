@@ -11,7 +11,7 @@
     <string name="signed_in_fmt">Вошёл как: %s</string>
     <string name="signed_in">Вошёл</string>
     <string name="signing_in">Вход…</string>
-    <string name="signed_out">Выйти</string>
+    <string name="signed_out">Надо бы войти:(</string>
     <string name="signed_in_err">"Ошибка: проверьте логи."</string>
     <string name="error_null_person">
         Error: Plus.PeopleApi.getCurrentPerson returned null. Ensure that the Google+ API is
@@ -54,4 +54,10 @@
     <string name="connections_fmt">Соединения: %1$s</string>
     <string name="msg_contacts_failed">Ошибка получения контактов.</string>
 
+    <!-- Send mail strings -->
+    <string name="recipient">Получатель</string>
+    <string name="subject">Тема</string>
+    <string name="message">Сообщение</string>
+    <string name="attachment">Прикрепленные файлы</string>
+    <string name="browse">Выбрать файл</string>
 </resources>

@@ -54,4 +54,10 @@
     <string name="connections_fmt">Connections: %1$s</string>
     <string name="msg_contacts_failed">Get contacts failed.</string>
 
+    <!-- Send mail strings -->
+    <string name="recipient">Recipient</string>
+    <string name="subject">Enter Subject</string>
+    <string name="message">Enter Message</string>
+    <string name="attachment">Attachment</string>
+    <string name="browse">Browse</string>
 </resources>

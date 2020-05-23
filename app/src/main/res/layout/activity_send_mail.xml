@@ -14,21 +14,21 @@
         android:id="@+id/to_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Recipient"
+        android:hint="@string/recipient"
         android:inputType="textEmailAddress"/>
 
     <EditText
         android:id="@+id/subject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Subject" />
+        android:hint="@string/subject" />
 
     <EditText
         android:id="@+id/body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top"
-        android:hint="Enter Message"
+        android:hint="@string/message"
         android:lines="3" />
 
     <LinearLayout
@@ -42,7 +42,7 @@
             android:id="@+id/attachmentData"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Attachment"
+            android:hint="@string/attachment"
             android:clickable="false"
             android:enabled="false"/>
 
@@ -51,7 +51,7 @@
             android:id="@+id/attachment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="BROWSE" />
+            android:hint="@string/browse" />
     </LinearLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/SendButton"

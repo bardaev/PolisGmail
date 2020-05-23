@@ -1,4 +1,4 @@
-package com.polis.polisgmail;
+package com.polis.polisgmail.login;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,12 +17,10 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.polis.polisgmail.R;
 import com.polis.polisgmail.listmail.ListMailsActivity;
 
-/**
- * Activity to demonstrate basic retrieval of the Google user's ID, email address, and basic
- * profile.
- */
+
 public class LoginActivity extends AppCompatActivity implements
         View.OnClickListener {
 
@@ -43,7 +41,7 @@ public class LoginActivity extends AppCompatActivity implements
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
-        findViewById(R.id.disconnect_button).setOnClickListener(this);
+       // findViewById(R.id.disconnect_button).setOnClickListener(this);
         findViewById(R.id.move_to_listmailsactivity_button).setOnClickListener(this);
 
         // [START configure_signin]
@@ -131,7 +129,7 @@ public class LoginActivity extends AppCompatActivity implements
     }
     // [END signOut]
 
-    // [START revokeAccess]
+ /*   // [START revokeAccess]
     private void revokeAccess() {
         mGoogleSignInClient.revokeAccess()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
@@ -143,7 +141,7 @@ public class LoginActivity extends AppCompatActivity implements
                     }
                 });
     }
-    // [END revokeAccess]
+    // [END revokeAccess]*/
 
     private void updateUI(@Nullable GoogleSignInAccount account) {
         if (account != null) {
@@ -170,9 +168,9 @@ public class LoginActivity extends AppCompatActivity implements
             case R.id.sign_out_button:
                 signOut();
                 break;
-            case R.id.disconnect_button:
+/*            case R.id.disconnect_button:
                 revokeAccess();
-                break;
+                break;*/
             case R.id.move_to_listmailsactivity_button:
                 Intent intent = new Intent(this, ListMailsActivity.class);
                 startActivity(intent);

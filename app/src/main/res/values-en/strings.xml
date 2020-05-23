@@ -60,4 +60,5 @@
     <string name="message">Enter Message</string>
     <string name="attachment">Attachment</string>
     <string name="browse">Browse</string>
+
 </resources>

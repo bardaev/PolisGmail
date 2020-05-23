@@ -1,31 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/activity_send">
+    android:background="@color/blue_grey_700"
+    android:orientation="vertical"
+    android:weightSum="4"
+    tools:context=".sendmail.SendMailActivity">
+
 
     <EditText
         android:id="@+id/to_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Recipient"
+        android:hint="@string/recipient"
         android:inputType="textEmailAddress"/>
 
     <EditText
         android:id="@+id/subject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Subject" />
+        android:hint="@string/subject" />
 
     <EditText
         android:id="@+id/body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top"
-        android:hint="Enter Message"
+        android:hint="@string/message"
         android:lines="3" />
 
     <LinearLayout
@@ -39,7 +42,7 @@
             android:id="@+id/attachmentData"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Attachment"
+            android:hint="@string/attachment"
             android:clickable="false"
             android:enabled="false"/>
 
@@ -48,25 +51,18 @@
             android:id="@+id/attachment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="BROWSE" />
+            android:hint="@string/browse" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/changeAccount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Change Account" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/SendButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:layout_marginTop="240dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_gravity="bottom|right"
         android:clickable="true"
-        app:srcCompat="@drawable/btn_send"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        app:srcCompat="@drawable/icon"
         tools:ignore="RtlHardcoded" />
+
 
 </LinearLayout>

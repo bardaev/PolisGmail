@@ -3,7 +3,6 @@ package com.polis.polisgmail.listmail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.polis.polisgmail.App;
-import com.polis.polisgmail.LoginActivity;
+import com.polis.polisgmail.login.LoginActivity;
 import com.polis.polisgmail.MailLab;
 import com.polis.polisgmail.R;
 import com.polis.polisgmail.dao.Mail;

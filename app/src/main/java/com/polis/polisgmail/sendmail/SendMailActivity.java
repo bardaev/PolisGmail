@@ -151,7 +151,9 @@ public class SendMailActivity extends AppCompatActivity {
         if (!isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
-            chooseAccount(view);
+            mCredential.setSelectedAccountName(getIntent().getExtras().getString("SendEmail"));
+            Log.v("accountdata2", getIntent().getExtras().getString("SendEmail"));
+            getResultsFromApi(view);
         } else if (!internetDetector.checkMobileInternetConn()) {
             showMessage(view, "No network connection available.");
         } else if (!Utils.isNotEmpty(edtToAddress)) {
@@ -190,31 +192,10 @@ public class SendMailActivity extends AppCompatActivity {
                 Utils.REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
     }
-//
-//    // Storing Mail ID using Shared Preferences
-    private void chooseAccount(View view) {
-        if (Utils.checkPermission(getApplicationContext(), Manifest.permission.GET_ACCOUNTS)) {
-            String accountName = getPreferences(Context.MODE_PRIVATE).getString(PREF_ACCOUNT_NAME, null);
-            if (accountName != null) {
-                startActivityForResult(mCredential.newChooseAccountIntent(), Utils.REQUEST_ACCOUNT_PICKER);
-                mCredential.setSelectedAccountName(accountName);
-                getResultsFromApi(view);
-            } else {
-                // Start a dialog from which the user can choose an account
-                startActivityForResult(mCredential.newChooseAccountIntent(), Utils.REQUEST_ACCOUNT_PICKER);
-            }
-        } else {
-            ActivityCompat.requestPermissions(SendMailActivity.this,
-                    new String[]{Manifest.permission.GET_ACCOUNTS}, Utils.REQUEST_PERMISSION_GET_ACCOUNTS);
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case Utils.REQUEST_PERMISSION_GET_ACCOUNTS:
-                chooseAccount(sendFabButton);
-                break;
             case SELECT_PHOTO:
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                 photoPickerIntent.setType("image/*");

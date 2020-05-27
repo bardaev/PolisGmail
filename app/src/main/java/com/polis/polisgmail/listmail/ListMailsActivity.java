@@ -269,7 +269,8 @@ public class ListMailsActivity extends AppCompatActivity implements
             messages = listMessagesWithLabels(mService, user, LabelIds);
             JSONArray jArray = new JSONArray(messages.toString());
             Log.v("tag before for",  "123");
-            for (int i=0; i < jArray.length(); i++)
+            //for (int i=0; i < jArray.length(); i++)
+            for (int i=0; i < 50; i++)
             {
                 try {
                     JSONObject parsedID = jArray.getJSONObject(i);

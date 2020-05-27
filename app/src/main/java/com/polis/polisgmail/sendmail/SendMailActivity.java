@@ -22,8 +22,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -39,6 +44,7 @@ import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.Message;
 import com.polis.polisgmail.R;
+import com.polis.polisgmail.login.LoginActivity;
 
 
 import java.io.ByteArrayOutputStream;
@@ -78,7 +84,6 @@ public class SendMailActivity extends AppCompatActivity {
     private InternetDetector internetDetector;
     private final int SELECT_PHOTO = 1;
     public String fileName = "";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +104,12 @@ public class SendMailActivity extends AppCompatActivity {
             }
         });
 
+
+
+
+
+
+
         sendFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,6 +127,7 @@ public class SendMailActivity extends AppCompatActivity {
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
+        Log.v("credential is ",  mCredential.toString());
 
         // Initializing Progress Dialog
         mProgress = new ProgressDialog(this);
@@ -184,6 +196,7 @@ public class SendMailActivity extends AppCompatActivity {
         if (Utils.checkPermission(getApplicationContext(), Manifest.permission.GET_ACCOUNTS)) {
             String accountName = getPreferences(Context.MODE_PRIVATE).getString(PREF_ACCOUNT_NAME, null);
             if (accountName != null) {
+                startActivityForResult(mCredential.newChooseAccountIntent(), Utils.REQUEST_ACCOUNT_PICKER);
                 mCredential.setSelectedAccountName(accountName);
                 getResultsFromApi(view);
             } else {

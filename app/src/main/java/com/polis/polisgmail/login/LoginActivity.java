@@ -63,6 +63,8 @@ public class LoginActivity extends AppCompatActivity implements
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setColorScheme(SignInButton.COLOR_LIGHT);
         // [END customize_button]
+
+        //mCredential.getSelectedAccountName() == null
     }
 
     @Override

@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -43,6 +44,8 @@ import com.polis.polisgmail.R;
 import com.polis.polisgmail.dao.Mail;
 import com.polis.polisgmail.di.CompositionRoot;
 import com.polis.polisgmail.listmail.listeners.OnRefresh;
+import com.polis.polisgmail.models.sql.DataBase;
+import com.polis.polisgmail.models.sql.DataBaseMailDao;
 import com.polis.polisgmail.sendmail.InternetDetector;
 import com.polis.polisgmail.sendmail.SendMailActivity;
 import com.polis.polisgmail.sendmail.Utils;
@@ -74,6 +77,8 @@ public class ListMailsActivity extends AppCompatActivity implements
     private static final String PREF_ACCOUNT_NAME = "accountName";
     GoogleAccountCredential mCredential;
     ProgressDialog mProgress;
+    private DataBase db;
+    private DataBaseMailDao dao;
     private InternetDetector internetDetector;
     private static final String[] SCOPES = {
             GmailScopes.GMAIL_LABELS,
@@ -266,28 +271,54 @@ public class ListMailsActivity extends AppCompatActivity implements
             JSONArray jArray = new JSONArray(messages.toString());
             Log.v("tag before for",  "123");
             //for (int i=0; i < jArray.length(); i++)
-            for (int i=0; i < 50; i++)
+            String mailAuthor = null;
+
+            for (int i=0; i < 3; i++)
             {
                 try {
                     JSONObject parsedID = jArray.getJSONObject(i);
                     // Pulling items from the array
                     String parsedMessage = parsedID.getString("id");
                     Message message = getMessage(mService, user, parsedMessage);
-                    Log.v("message",  message.toString());
-                    Log.v("Parsed Message",  parsedMessage);
 
+                    JSONObject parsedInfo = new JSONObject(message.toString());
+                    String parsedMail = parsedInfo.getString("payload");
+                    parsedInfo = new JSONObject(parsedMail);
+                    parsedMail = parsedInfo.getString("headers");
+                    JSONArray jsonArray = new JSONArray(parsedMail);
+                    for (int j = 0; j < jsonArray.length(); j++) {
+                        JSONObject parsedName = jsonArray.getJSONObject(j);
+                        String parsedStrName = parsedName.getString("name");
+                        if (parsedStrName.equals("From")) {
+                            String parsedStringName = parsedName.getString("value");
+                            mailAuthor = parsedStringName;
+                        }
+                    }
+
+                    Log.v("Author: ", mailAuthor);
+                    Log.v("Message",  message.getSnippet());
+                    Log.v("________","________");
+
+                    String theme = message.getSnippet().substring(0,20);
+                    String mailTo = getIntent().getExtras().getString("SendEmail");
+
+                    db = Room.databaseBuilder(getApplicationContext(),
+                            DataBase.class, "DataBase").allowMainThreadQueries().build();
+                    dao = db.mailDao();
+                    Mail mail = new Mail();
+//                    mail.setFrom("Sender: "+mailAuthor);
+//                    mail.setTo("To: " + mailTo);
+//                    mail.setTheme(" "+theme);
+//                    mail.setMessage("");
+//                    dao.insert(mail);
+//                    dao.delete(mail);
                 } catch (JSONException e) {
                     Log.v("trynotsuccess",  ":(");
                     // Oops
                 }
             }
-            MimeMessage email = getMimeMessage(mService, user, "1452302f78b8ed4e");
-            Log.v("mimemessage1",  email.toString());
-            getLabel(mService, user, "INBOX");
-            Log.v("messages",  Integer.toString(messages.size()));
             String response = "";
             return response;
-
         }
 
         public void getLabel(Gmail service, String userId, String labelId)
@@ -302,7 +333,7 @@ public class ListMailsActivity extends AppCompatActivity implements
                 throws IOException {
             Message message = service.users().messages().get(userId, messageId).execute();
 
-            System.out.println("Message snippet: " + message.getSnippet());
+            //System.out.println("Message snippet: " + message.getSnippet());
 
             return message;
         }

@@ -123,6 +123,7 @@ public class ListMailsActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ListMailsActivity.this, SendMailActivity.class);
+                intent.putExtra("SendEmail", getIntent().getExtras().getString("SendEmail"));
                 startActivity(intent);
             }
         });

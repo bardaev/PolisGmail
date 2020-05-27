@@ -53,6 +53,10 @@ import com.polis.polisgmail.sendmail.InternetDetector;
 import com.polis.polisgmail.sendmail.SendMailActivity;
 import com.polis.polisgmail.sendmail.Utils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -289,17 +293,28 @@ public class ListMailsActivity extends AppCompatActivity implements
             }
         }
 
-        private String getDataFromApi() throws IOException {
+        private String getDataFromApi() throws IOException, JSONException {
             String user = "me";
-
             List<String> LabelIds = new ArrayList<String>();
             LabelIds.add("INBOX");
             List<Message> messages = new ArrayList<Message>();
             messages = listMessagesWithLabels(mService, user, LabelIds);
-//            Log.v("messages",  messages.toString());
-//            for (Message message : messages) {
-//                getMessage(mService, user, message.toPrettyString());
-//            }
+            JSONArray jArray = new JSONArray(messages.toString());
+            Log.v("tag before for",  "123");
+            for (int i=0; i < jArray.length(); i++)
+            {
+                try {
+                    JSONObject parsedID = jArray.getJSONObject(i);
+                    // Pulling items from the array
+                    String parsedMessage = parsedID.getString("id");
+                    getMessage(mService, user, parsedMessage);
+                    Log.v("Parsed Message",  parsedMessage);
+                } catch (JSONException e) {
+                    Log.v("trynotsuccess",  ":(");
+                    // Oops
+                }
+            }
+
             Log.v("messages",  Integer.toString(messages.size()));
             String response = "";
             return response;

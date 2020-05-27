@@ -12,7 +12,7 @@ import java.util.List;
 
 @Dao
 public interface DataBaseMailDao {
-    @Query("Select * from Mail")
+    @Query("Select * from Mail where uuid = 1")
     public List<Mail> getAll();
 
     @Query("SELECT * FROM Mail WHERE uuid = :id")

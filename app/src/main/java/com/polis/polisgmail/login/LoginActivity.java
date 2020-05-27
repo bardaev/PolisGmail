@@ -28,6 +28,7 @@ public class LoginActivity extends AppCompatActivity implements
     private static final int RC_SIGN_IN = 9001;
 
     private GoogleSignInClient mGoogleSignInClient;
+    private GoogleSignInAccount mGoogleSignInAccount;
     private TextView mStatusTextView;
 
     @Override
@@ -75,7 +76,10 @@ public class LoginActivity extends AppCompatActivity implements
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        mGoogleSignInAccount = account;
         updateUI(account);
+        Log.v("accname1",account.getDisplayName());
+        Log.v("acctr5",account.getEmail());
         // [END on_start_sign_in]
     }
 
@@ -100,6 +104,7 @@ public class LoginActivity extends AppCompatActivity implements
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             // Signed in successfully, show authenticated UI.
+            mGoogleSignInAccount = account;
             updateUI(account);
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
@@ -149,6 +154,7 @@ public class LoginActivity extends AppCompatActivity implements
         if (account != null) {
             mStatusTextView.setText(getString(R.string.signed_in_fmt, account.getDisplayName()));
 
+
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
             findViewById(R.id.move_to_listmailsactivity_button).setVisibility(View.VISIBLE);
@@ -175,6 +181,7 @@ public class LoginActivity extends AppCompatActivity implements
                 break;*/
             case R.id.move_to_listmailsactivity_button:
                 Intent intent = new Intent(this, ListMailsActivity.class);
+                intent.putExtra("SendEmail", mGoogleSignInAccount.getEmail());
                 startActivity(intent);
         }
     }

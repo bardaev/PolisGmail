@@ -7,12 +7,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,8 +21,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -36,10 +36,11 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.Base64;
+import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
+import com.google.api.services.gmail.model.Label;
 import com.google.api.services.gmail.model.ListMessagesResponse;
 import com.google.api.services.gmail.model.Message;
 import com.polis.polisgmail.App;
@@ -58,24 +59,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.BodyPart;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
 import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 public class ListMailsActivity extends AppCompatActivity implements
         View.OnClickListener {
@@ -106,7 +98,6 @@ public class ListMailsActivity extends AppCompatActivity implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        View view;
 
         init();
         mailsButton.setOnClickListener(new View.OnClickListener() {
@@ -140,7 +131,7 @@ public class ListMailsActivity extends AppCompatActivity implements
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
 
-        mailsButton = (Button)findViewById(R.id.mails);
+        mailsButton = findViewById(R.id.mails);
         findViewById(R.id.move_to_loginactivity_button).setOnClickListener(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -161,29 +152,13 @@ public class ListMailsActivity extends AppCompatActivity implements
         if (!isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
-            chooseAccount(view);
+            mCredential.setSelectedAccountName(getIntent().getExtras().getString("SendEmail"));
+            Log.v("accountdata2", getIntent().getExtras().getString("SendEmail"));
+            getResultsFromApi(view);
         } else if (!internetDetector.checkMobileInternetConn()) {
             showMessage(view, "No network connection available.");
         } else {
             new MakeRequestTask(this, mCredential).execute();
-        }
-    }
-
-
-    private void chooseAccount(View view) {
-        if (Utils.checkPermission(getApplicationContext(), Manifest.permission.GET_ACCOUNTS)) {
-            String accountName = getPreferences(Context.MODE_PRIVATE).getString(PREF_ACCOUNT_NAME, null);
-            if (accountName != null) {
-                startActivityForResult(mCredential.newChooseAccountIntent(), Utils.REQUEST_ACCOUNT_PICKER);
-                mCredential.setSelectedAccountName(accountName);
-                getResultsFromApi(view);
-            } else {
-                // Start a dialog from which the user can choose an account
-                startActivityForResult(mCredential.newChooseAccountIntent(), Utils.REQUEST_ACCOUNT_PICKER);
-            }
-        } else {
-            ActivityCompat.requestPermissions(ListMailsActivity.this,
-                    new String[]{Manifest.permission.GET_ACCOUNTS}, Utils.REQUEST_PERMISSION_GET_ACCOUNTS);
         }
     }
 
@@ -220,14 +195,7 @@ public class ListMailsActivity extends AppCompatActivity implements
         mailPresenter.detachView();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case Utils.REQUEST_PERMISSION_GET_ACCOUNTS:
-                chooseAccount(mailsButton);
-                break;
-        }
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -293,11 +261,11 @@ public class ListMailsActivity extends AppCompatActivity implements
             }
         }
 
-        private String getDataFromApi() throws IOException, JSONException {
+        private String getDataFromApi() throws IOException, JSONException, MessagingException {
             String user = "me";
-            List<String> LabelIds = new ArrayList<String>();
+            List<String> LabelIds = new ArrayList<>();
             LabelIds.add("INBOX");
-            List<Message> messages = new ArrayList<Message>();
+            List<Message> messages;
             messages = listMessagesWithLabels(mService, user, LabelIds);
             JSONArray jArray = new JSONArray(messages.toString());
             Log.v("tag before for",  "123");
@@ -309,20 +277,30 @@ public class ListMailsActivity extends AppCompatActivity implements
                     String parsedMessage = parsedID.getString("id");
                     getMessage(mService, user, parsedMessage);
                     Log.v("Parsed Message",  parsedMessage);
+
                 } catch (JSONException e) {
                     Log.v("trynotsuccess",  ":(");
                     // Oops
                 }
             }
-
+            MimeMessage email = getMimeMessage(mService, user, "1452302f78b8ed4e");
+            Log.v("mimemessage1",  email.toString());
+            getLabel(mService, user, "INBOX");
             Log.v("messages",  Integer.toString(messages.size()));
             String response = "";
             return response;
 
         }
 
+        public void getLabel(Gmail service, String userId, String labelId)
+                throws IOException {
+            Label label = service.users().labels().get(userId, labelId).execute();
+            Log.v("label", label.getName());
+            //System.out.println("Label " + label.getName() + " retrieved.");
+            //System.out.println(label.toPrettyString());
+        }
 
-        public Message getMessage(Gmail service, String userId, String messageId)
+        private Message getMessage(Gmail service, String userId, String messageId)
                 throws IOException {
             Message message = service.users().messages().get(userId, messageId).execute();
 
@@ -331,22 +309,22 @@ public class ListMailsActivity extends AppCompatActivity implements
             return message;
         }
 
-//        public MimeMessage getMimeMessage(Gmail service, String userId, String messageId)
-//                throws IOException, MessagingException {
-//            Message message = service.users().messages().get(userId, messageId).setFormat("raw").execute();
-//
-//            Base64 base64Url = new Base64(true);
-//            byte[] emailBytes = base64Url.decodeBase64(message.getRaw());
-//
-//            Properties props = new Properties();
-//            Session session = Session.getDefaultInstance(props, null);
-//
-//            MimeMessage email = new MimeMessage(session, new ByteArrayInputStream(emailBytes));
-//
-//            return email;
-//        }
+        private MimeMessage getMimeMessage(Gmail service, String userId, String messageId)
+                throws IOException, MessagingException {
+            Message message = service.users().messages().get(userId, messageId).setFormat("raw").execute();
+
+            Base64 base64Url = new Base64(true);
+            byte[] emailBytes = base64Url.decodeBase64(message.getRaw());
+
+            Properties props = new Properties();
+            Session session = Session.getDefaultInstance(props, null);
+
+            MimeMessage email = new MimeMessage(session, new ByteArrayInputStream(emailBytes));
+
+            return email;
+        }
         // Method to receive email
-        public List<Message> listMessagesWithLabels(Gmail service, String userId,
+        private List<Message> listMessagesWithLabels(Gmail service, String userId,
                                                            List<String> labelIds) throws IOException {
             ListMessagesResponse response = service.users().messages().list(userId)
                     .setLabelIds(labelIds).execute();

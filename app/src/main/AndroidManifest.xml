@@ -20,7 +20,6 @@
         <activity android:name=".listmail.ListMailsActivity"/>
         <activity android:name=".sendmail.SendMailActivity"
             android:parentActivityName=".listmail.ListMailsActivity"/>
-        <activity android:name=".SendingActivity"/>
         <activity
             android:name=".login.LoginActivity">
             <intent-filter>

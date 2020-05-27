@@ -60,4 +60,10 @@
     <string name="message">Enter Message</string>
     <string name="attachment">Attachment</string>
     <string name="browse">Browse</string>
+
+
+
+    <!-- Listmail string -->
+    <string name="move_to_loginactivity">Change user</string>
+    <string name="mails">Refresh mail list</string>
 </resources>

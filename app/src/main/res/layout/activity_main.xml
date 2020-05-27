@@ -32,7 +32,7 @@
 
     <Button
         android:id="@+id/move_to_loginactivity_button"
-        android:text="Move to Login menu"
+        android:text="@string/move_to_loginactivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
@@ -43,7 +43,7 @@
         tools:ignore="RtlHardcoded" />
     <Button
         android:id="@+id/mails"
-        android:text="mails"
+        android:text="@string/mails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"

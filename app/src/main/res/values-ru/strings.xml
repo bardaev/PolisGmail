@@ -60,4 +60,8 @@
     <string name="message">Сообщение</string>
     <string name="attachment">Прикрепленные файлы</string>
     <string name="browse">Выбрать файл</string>
+
+    <!-- Listmail string -->
+    <string name="move_to_loginactivity">Сменить пользователя</string>
+    <string name="mails">Обновить</string>
 </resources>

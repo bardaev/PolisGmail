@@ -143,7 +143,8 @@ public class ListMailsActivity extends AppCompatActivity implements
         mailRecyclerView.setAdapter(mailAdapter);
 
         MailModel mailModel = new MailModel(mailLab);
-        mailPresenter = new MailPresenter(mailModel);
+        String receiver = getIntent().getExtras().getString("SendEmail");
+        mailPresenter = new MailPresenter(mailModel, receiver);
         mailPresenter.attachView(this);
         mailPresenter.loadMails();
         View view = mailsButton;
@@ -178,8 +179,8 @@ public class ListMailsActivity extends AppCompatActivity implements
         }
     }
 
-    public void showMails(List<Mail> mails) {
-        mailAdapter.setMails(mails);
+    public void showMails(List<Mail> mails, String receiver) {
+        mailAdapter.setMails(mails, receiver);
     }
 
     public void onClick(View view) {
@@ -273,7 +274,7 @@ public class ListMailsActivity extends AppCompatActivity implements
             //for (int i=0; i < jArray.length(); i++)
             String mailAuthor = null;
 
-            for (int i=0; i < 3; i++)
+            for (int i=0; i < 20; i++)
             {
                 try {
                     JSONObject parsedID = jArray.getJSONObject(i);
@@ -299,19 +300,36 @@ public class ListMailsActivity extends AppCompatActivity implements
                     Log.v("Message",  message.getSnippet());
                     Log.v("________","________");
 
-                    String theme = message.getSnippet().substring(0,20);
+                    String theme = message.getSnippet().substring(0,15);
                     String mailTo = getIntent().getExtras().getString("SendEmail");
 
                     db = Room.databaseBuilder(getApplicationContext(),
                             DataBase.class, "DataBase").allowMainThreadQueries().build();
                     dao = db.mailDao();
-                    Mail mail = new Mail();
-//                    mail.setFrom("Sender: "+mailAuthor);
-//                    mail.setTo("To: " + mailTo);
-//                    mail.setTheme(" "+theme);
-//                    mail.setMessage("");
-//                    dao.insert(mail);
-//                    dao.delete(mail);
+                    boolean check = false;
+                    // check = true;
+                    List<Mail> mails = dao.getAll();
+                    for (Mail mailCurrent : mails) {
+                    //    dao.delete(mailCurrent);
+                        if(mailCurrent.getMessage().equals(parsedMessage)) {
+                            check = true;
+                        }
+                    }
+                    if (check == false) {
+                        Log.v("mailssize", Integer.toString(mails.size()));
+                        Mail mail = new Mail();
+                        mail.setFrom("Sender: "+mailAuthor);
+                        mail.setTo("To: " + mailTo);
+                        mail.setTheme("Theme: "+theme);
+                        mail.setMessage("" + parsedMessage);
+                        dao.insert(mail);
+                    }
+
+
+                    Log.v("id",parsedMessage);
+
+
+                    mailPresenter.loadMails();
                 } catch (JSONException e) {
                     Log.v("trynotsuccess",  ":(");
                     // Oops
@@ -371,7 +389,7 @@ public class ListMailsActivity extends AppCompatActivity implements
             }
 
             for (Message message : messages) {
-                System.out.println(message.toPrettyString());
+              // System.out.println(message.toPrettyString());
             }
 
             return messages;

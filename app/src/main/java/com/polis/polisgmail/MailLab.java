@@ -52,7 +52,7 @@ public class MailLab {
         db = Room.databaseBuilder(context.getApplicationContext(),
                 DataBase.class, "DataBase").allowMainThreadQueries().build();
         dao = db.mailDao();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < -1; i++) {
             Mail mail = new Mail();
             mail.setFrom("Sender: Sender # " + arr[i]);
             mail.setTo("To:" + arr[19 - i]);

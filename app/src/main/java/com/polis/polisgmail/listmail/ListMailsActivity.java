@@ -158,7 +158,7 @@ public class ListMailsActivity extends AppCompatActivity implements
             Log.v("accountdata2", getIntent().getExtras().getString("SendEmail"));
             getResultsFromApi(view);
         } else if (!internetDetector.checkMobileInternetConn()) {
-            showMessage(view, "");
+            showMessage(view, "No internet connection");
         } else {
             new MakeRequestTask(this, mCredential).execute();
         }
@@ -404,9 +404,9 @@ public class ListMailsActivity extends AppCompatActivity implements
         protected void onPostExecute(String output) {
             mProgress.hide();
             if (output == null || output.length() == 0) {
-                //showMessage(view, "No results returned.");
+                showMessage(view, "No results returned.");
             } else {
-                //showMessage(view, output);
+                showMessage(view, output);
             }
         }
 
@@ -424,14 +424,14 @@ public class ListMailsActivity extends AppCompatActivity implements
                             Utils.REQUEST_AUTHORIZATION);
                 } else {
                     if (mLastError.toString() == "com.google.api.client.googleapis.json.GoogleJsonResponseException: 404 Not Found") {
-                      //  showMessage(view, "The following error occurred: u have no messages");
+                        showMessage(view, "The following error occurred: u have no messages");
                     } else {
-                       // showMessage(view, "The following error occurred:\n" + mLastError);
+                        showMessage(view, "The following error occurred:\n" + mLastError);
                     }
                                         Log.v("Error", mLastError + "");
                 }
             } else {
-                //showMessage(view, "Request Cancelled.");
+                showMessage(view, "Request Cancelled.");
             }
         }
     }

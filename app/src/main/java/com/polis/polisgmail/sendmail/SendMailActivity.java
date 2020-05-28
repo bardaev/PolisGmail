@@ -383,7 +383,7 @@ public class SendMailActivity extends AppCompatActivity {
             if (output == null || output.length() == 0) {
                 showMessage(view, "No results returned.");
             } else {
-                showMessage(view, output);
+                showMessage(view, "Mail send");
             }
         }
 

@@ -8,9 +8,11 @@ public class MailPresenter {
 
     private ListMailsActivity view;
     private final MailModel model;
+    private final String receiver;
 
-    public MailPresenter(MailModel model) {
+    public MailPresenter(MailModel model, String receiver) {
         this.model = model;
+        this.receiver = receiver;
     }
 
     public void attachView(ListMailsActivity listMailsActivity) {
@@ -25,7 +27,7 @@ public class MailPresenter {
         model.loadMails(new MailModel.LoadMailsCallback() {
             @Override
             public void onLoad(List<Mail> mails) {
-                view.showMails(mails);
+                view.showMails(mails, receiver);
             }
         });
     }

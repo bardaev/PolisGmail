@@ -1,5 +1,6 @@
 package com.polis.polisgmail.listmail;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,9 +42,20 @@ public class MailAdapter extends RecyclerView.Adapter<MailAdapter.MailHolder> {
         return mailList.size();
     }
 
-    public void setMails(List<Mail> mails) {
+    public void setMails(List<Mail> mails, String receiver) {
         mailList.clear();
-        mailList.addAll(mails);
+        for (Mail mail : mails) {
+;
+            String check = "To: " + receiver;
+            Log.v("Hi1",check);
+            Log.v("Hi2",mail.getTo());
+            if (mail.getTo().equals(check)) {
+                Log.v("Hi","123");
+                mailList.add(mail);
+            }
+
+        }
+        //mailList.addAll(mails);
         notifyDataSetChanged();
     }
 

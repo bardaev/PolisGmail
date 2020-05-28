@@ -158,7 +158,7 @@ public class ListMailsActivity extends AppCompatActivity implements
             Log.v("accountdata2", getIntent().getExtras().getString("SendEmail"));
             getResultsFromApi(view);
         } else if (!internetDetector.checkMobileInternetConn()) {
-            showMessage(view, "No internet connection");
+            showMessage(view, "No network connection avialable.");
         } else {
             new MakeRequestTask(this, mCredential).execute();
         }
